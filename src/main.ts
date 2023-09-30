@@ -22,12 +22,13 @@ export async function run(): Promise<void> {
         'issues',
         'issue_comment',
         'pull_request',
+        'pull_request_target',
         'pull_request_review',
         'pull_request_review_comment'
       ].includes(github.context.eventName)
     ) {
       core.warning(
-        `Event name is not in [issues, issue_comment, pull_request, pull_request_review, pull_request_review_comment]!`
+        `Event name is not in [issues, issue_comment, pull_request, pull_request_target, pull_request_review, pull_request_review_comment]!`
       )
       return
     }
@@ -66,7 +67,8 @@ export async function run(): Promise<void> {
     }
 
     const body: string =
-      github.context.eventName === 'pull_request'
+      github.context.eventName === 'pull_request' ||
+      github.context.eventName === 'pull_request_target'
         ? (github.context.payload as PullRequestEvent).pull_request.body ?? ''
         : github.context.eventName === 'pull_request_review'
         ? (github.context.payload as PullRequestReviewEvent).review.body ?? ''
